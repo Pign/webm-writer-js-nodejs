@@ -40,7 +40,7 @@
             throw new Error("Failed to decode WebP Base64 URL");
         }
         
-        return window.atob(url.substring("data:image\/webp;base64,".length));
+        return atob(url.substring("data:image\/webp;base64,".length));
     }
     
     /**
@@ -343,7 +343,8 @@
              */
             function convertAlphaToGrayscaleImage(source) {
                 if (alphaBuffer === null || alphaBuffer.width !== source.width || alphaBuffer.height !== source.height) {
-                    alphaBuffer = document.createElement("canvas");
+                    // alphaBuffer = document.createElement("canvas");
+                    alphaBuffer = require('@napi-rs/canvas').createCanvas(source.width, source.height);
                     alphaBuffer.width = source.width;
                     alphaBuffer.height = source.height;
                     
@@ -904,7 +905,7 @@
                 }
                 
                 if (options.transparent) {
-                    if (alpha instanceof HTMLCanvasElement || typeof alpha === "string") {
+                    if (typeof alpha === "string") {
                         frameAlpha = alpha;
                     } else if (keyframe.hasAlpha) {
                         frameAlpha = convertAlphaToGrayscaleImage(frame);
